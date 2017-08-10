@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyAmap</string>
+    <string name="gpsfollow">追随</string>
+    <string name="gpslocate">定位</string>
+    <string name="gpsrotate">旋转</string>
+    <string name="storage_and_location_rationale">需要获取手机的位置权限和读写权限</string>
+    <string name="returned_from_app_settings_to_activity">Returned from app settings</string>
+</resources>
