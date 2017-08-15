@@ -5,4 +5,6 @@
     <string name="gpsrotate">旋转</string>
     <string name="storage_and_location_rationale">需要获取手机的位置权限和读写权限</string>
     <string name="returned_from_app_settings_to_activity">Returned from app settings</string>
+    <string name="startLocation">启动定位服务</string>
+    <string name="stopLocation">关闭定位服务</string>
 </resources>

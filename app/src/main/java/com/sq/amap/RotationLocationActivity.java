@@ -28,6 +28,7 @@ import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.sq.amap.listener.SensorEventHelper;
 
 import java.util.List;
 

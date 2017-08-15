@@ -1,4 +1,4 @@
-package com.sq.amap;
+package com.sq.amap.listener;
 
 import android.content.Context;
 import android.hardware.Sensor;
