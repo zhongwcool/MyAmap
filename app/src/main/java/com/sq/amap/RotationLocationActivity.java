@@ -43,9 +43,11 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     public static final String LOCATION_MARKER_FLAG = "mylocation";
     private static final String TAG = RotationLocationActivity.class.getSimpleName();
     //private static final int RC_STORAGE_PERM = 124;
-    private static final int RC_LOCATION_STORAGE_PERM = 123;
+    private static final int RC_LOCATION_PERM = 123;
+
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
+
     @BindView(R.id.map)
     MapView mapView;
     private AMap aMap;
@@ -71,16 +73,16 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @AfterPermissionGranted(RC_LOCATION_STORAGE_PERM)
+    @AfterPermissionGranted(RC_LOCATION_PERM)
     private void LocationTask() {
-        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, do the thing
             init();
         } else {
             // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.storage_and_location_rationale),
-                    RC_LOCATION_STORAGE_PERM, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
+                    RC_LOCATION_PERM, perms);
         }
     }
 
@@ -106,8 +108,7 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
 
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             // Do something after user returned from app settings screen, like showing a Toast.
-            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT).show();
             LocationTask();
         }
     }
