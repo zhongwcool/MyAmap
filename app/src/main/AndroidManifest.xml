@@ -63,6 +63,16 @@
             android:name=".LocationServiceActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".RecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RecordShowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PathRecordActivity"
+            android:screenOrientation="portrait" />
+
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
         <meta-data

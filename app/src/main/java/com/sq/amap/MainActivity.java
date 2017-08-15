@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.rotation_location, R.id.location_service})
+    @OnClick({R.id.rotation_location, R.id.location_service, R.id.path_record})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rotation_location: {
@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
             break;
             case R.id.location_service: {
                 LocationServiceActivity.start(this);
+            }
+            break;
+            case R.id.path_record: {
+                PathRecordActivity.start(this);
             }
             break;
         }
