@@ -73,6 +73,13 @@
             android:name=".PathRecordActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".InitialWelcomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InitialCenterActivity"
+            android:screenOrientation="portrait" />
+
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
         <meta-data
