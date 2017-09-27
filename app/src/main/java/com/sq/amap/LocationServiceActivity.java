@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.sq.amap.base.Constants;
 import com.sq.amap.service.LocationService;
 import com.sq.amap.service.LocationStatusManager;
-import com.sq.amap.service.Utils;
+import com.sq.amap.utils.LocationUtil;
 
 import java.util.List;
 
@@ -167,7 +167,7 @@ public class LocationServiceActivity extends AppCompatActivity implements EasyPe
      * 先关闭守护进程，再关闭定位服务
      */
     private void stopLocationService() {
-        sendBroadcast(Utils.getCloseBrodecastIntent());
+        sendBroadcast(LocationUtil.getCloseBrodecastIntent());
     }
 
 }

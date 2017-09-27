@@ -62,6 +62,9 @@
         <activity
             android:name=".LocationServiceActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".infowindow.InfoWindowsActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".RecordActivity"

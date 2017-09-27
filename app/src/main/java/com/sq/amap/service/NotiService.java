@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import com.sq.amap.ILocationHelperServiceAIDL;
 import com.sq.amap.ILocationServiceAIDL;
 import com.sq.amap.base.Constants;
+import com.sq.amap.utils.LocationUtil;
 
 /**
  * Created by liangchao_suxun on 17/1/16.
@@ -26,17 +27,17 @@ public class NotiService extends Service {
      * i
      * startForeground的 noti_id
      */
-    private static int NOTI_ID = 123321;
+    private static int NOTI_ID = 999321;
     private final String mHelperServiceName = Constants.action.LOCATION_HELPER_SERVICE;
     public Binder mBinder;
-    private Utils.CloseServiceReceiver mCloseReceiver;
+    private LocationUtil.CloseServiceReceiver mCloseReceiver;
     private ILocationHelperServiceAIDL mHelperAIDL;
     private ServiceConnection connection;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mCloseReceiver = new Utils.CloseServiceReceiver(this);
-        registerReceiver(mCloseReceiver, Utils.getCloseServiceFilter());
+        mCloseReceiver = new LocationUtil.CloseServiceReceiver(this);
+        registerReceiver(mCloseReceiver, LocationUtil.getCloseServiceFilter());
         return START_STICKY;
     }
 
@@ -54,7 +55,7 @@ public class NotiService extends Service {
      * 触发利用notification增加进程优先级
      */
     protected void applyNotiKeepMech() {
-        startForeground(NOTI_ID, Utils.buildNotification(getBaseContext()));
+        startForeground(NOTI_ID, LocationUtil.buildNotification(getBaseContext()));
         startBindHelperService();
     }
 
@@ -82,7 +83,7 @@ public class NotiService extends Service {
         };
         Intent intent = new Intent();
         intent.setAction(mHelperServiceName);
-        bindService(Utils.getExplicitIntent(getApplicationContext(), intent), connection, Service.BIND_AUTO_CREATE);
+        bindService(LocationUtil.getExplicitIntent(getApplicationContext(), intent), connection, Service.BIND_AUTO_CREATE);
     }
 
     @Nullable

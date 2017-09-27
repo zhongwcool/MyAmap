@@ -3,6 +3,8 @@ package com.sq.amap.service;
 import android.content.Context;
 
 import com.amap.api.location.AMapLocation;
+import com.sq.amap.utils.LocationUtil;
+import com.sq.amap.utils.PowerManagerUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +23,7 @@ public class WifiAutoCloseDelegate implements IWifiAutoCloseDelegate {
      */
     @Override
     public boolean isUseful(Context context) {
-        String manName = Utils.getManufacture(context);
+        String manName = LocationUtil.getManufacture(context);
         Pattern pattern = Pattern.compile("xiaomi", Pattern.CASE_INSENSITIVE);
         Matcher m = pattern.matcher(manName);
         return m.find();

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.sq.amap.service;
+package com.sq.amap.utils;
 
 import android.app.Notification;
 import android.app.Service;
@@ -33,10 +33,10 @@ import java.util.Locale;
  * @author hongming.wang
  * @创建时间： 2015年11月24日 上午11:46:50
  * @项目名称： AMapLocationDemo2.x
- * @文件名称: Utils.java
- * @类型名称: Utils
+ * @文件名称: LocationUtil.java
+ * @类型名称: LocationUtil
  */
-public class Utils {
+public class LocationUtil {
     /**
      * 开始定位
      */

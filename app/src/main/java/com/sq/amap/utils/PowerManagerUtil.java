@@ -1,4 +1,4 @@
-package com.sq.amap.service;
+package com.sq.amap.utils;
 
 import android.content.Context;
 import android.os.PowerManager;

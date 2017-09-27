@@ -7,6 +7,9 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.sq.amap.base.Constants;
+import com.sq.amap.utils.LocationUtil;
+import com.sq.amap.utils.NetUtil;
+import com.sq.amap.utils.PowerManagerUtil;
 
 /**
  * 包名： com.sq.amap
@@ -66,11 +69,11 @@ public class LocationService extends NotiService {
             long callBackTime = System.currentTimeMillis();
             StringBuffer sb = new StringBuffer();
             sb.append("定位完成 第" + locationCount + "次\n");
-            sb.append("回调时间: " + Utils.formatUTC(callBackTime, null) + "\n");
+            sb.append("回调时间: " + LocationUtil.formatUTC(callBackTime, null) + "\n");
             if (null == aMapLocation) {
                 sb.append("定位失败：location is null!!!!!!!");
             } else {
-                sb.append(Utils.getLocationStr(aMapLocation));
+                sb.append(LocationUtil.getLocationStr(aMapLocation));
             }
 
             Intent mIntent = new Intent(Constants.RECEIVER_ACTION);

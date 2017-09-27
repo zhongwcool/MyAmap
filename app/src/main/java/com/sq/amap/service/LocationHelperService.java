@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import com.sq.amap.ILocationHelperServiceAIDL;
 import com.sq.amap.ILocationServiceAIDL;
 import com.sq.amap.base.Constants;
+import com.sq.amap.utils.LocationUtil;
 
 /**
  * Created by liangchao_suxun on 17/1/18.
@@ -19,7 +20,7 @@ import com.sq.amap.base.Constants;
 public class LocationHelperService extends Service {
 
 
-    private Utils.CloseServiceReceiver mCloseReceiver;
+    private LocationUtil.CloseServiceReceiver mCloseReceiver;
     private ServiceConnection mInnerConnection;
     private HelperBinder mBinder;
 
@@ -27,8 +28,8 @@ public class LocationHelperService extends Service {
     public void onCreate() {
         super.onCreate();
         startBind();
-        mCloseReceiver = new Utils.CloseServiceReceiver(this);
-        registerReceiver(mCloseReceiver, Utils.getCloseServiceFilter());
+        mCloseReceiver = new LocationUtil.CloseServiceReceiver(this);
+        registerReceiver(mCloseReceiver, LocationUtil.getCloseServiceFilter());
     }
 
     @Override
@@ -54,7 +55,7 @@ public class LocationHelperService extends Service {
             public void onServiceDisconnected(ComponentName name) {
                 Intent intent = new Intent();
                 intent.setAction(locationServiceName);
-                startService(Utils.getExplicitIntent(getApplicationContext(), intent));
+                startService(LocationUtil.getExplicitIntent(getApplicationContext(), intent));
             }
 
             @Override
@@ -70,7 +71,7 @@ public class LocationHelperService extends Service {
 
         Intent intent = new Intent();
         intent.setAction(locationServiceName);
-        bindService(Utils.getExplicitIntent(getApplicationContext(), intent), mInnerConnection, Service.BIND_AUTO_CREATE);
+        bindService(LocationUtil.getExplicitIntent(getApplicationContext(), intent), mInnerConnection, Service.BIND_AUTO_CREATE);
     }
 
     @Nullable
@@ -86,7 +87,7 @@ public class LocationHelperService extends Service {
     private class HelperBinder extends ILocationHelperServiceAIDL.Stub {
         @Override
         public void onFinishBind(int notiId) throws RemoteException {
-            startForeground(notiId, Utils.buildNotification(LocationHelperService.this.getApplicationContext()));
+            startForeground(notiId, LocationUtil.buildNotification(LocationHelperService.this.getApplicationContext()));
             stopForeground(true);
         }
     }
