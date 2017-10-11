@@ -461,10 +461,12 @@ public class PathRecordActivity extends Activity implements LocationSource,
                 mDistance += distance;
                 mTraceoverlay.setDistance(mTraceoverlay.getDistance() + distance);
                 if (mlocMarker == null) {
-                    mlocMarker = mAMap.addMarker(new MarkerOptions().position(linepoints.get(linepoints.size() - 1))
-                            .icon(BitmapDescriptorFactory
-                                    .fromResource(R.drawable.point))
-                            .title("距离：" + mDistance + "米"));
+                    mlocMarker = mAMap.addMarker(
+                            new MarkerOptions()
+                                    .position(linepoints.get(linepoints.size() - 1))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.point))
+                                    .title("距离：" + mDistance + "米")
+                    );
                     mlocMarker.showInfoWindow();
                 } else {
                     mlocMarker.setTitle("距离：" + mDistance + "米");

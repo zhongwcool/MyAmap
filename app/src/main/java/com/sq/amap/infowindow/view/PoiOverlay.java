@@ -39,6 +39,7 @@ public class PoiOverlay {
             for (int i = 0; i < mPois.size(); i++) {
                 Marker marker = mAMap.addMarker(getMarkerOptions(i));
                 marker.setObject(i);
+                marker.setClickable(false);
                 mPoiMarks.add(marker);
             }
         } catch (Throwable e) {
@@ -64,7 +65,8 @@ public class PoiOverlay {
                 if (mAMap == null)
                     return;
                 if (mPois.size() == 1) {
-                    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mPois.get(0).getLatLonPoint().getLatitude(),
+                    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                            mPois.get(0).getLatLonPoint().getLatitude(),
                             mPois.get(0).getLatLonPoint().getLongitude()), 18f));
                 } else {
                     LatLngBounds bounds = getLatLngBounds();
@@ -79,7 +81,8 @@ public class PoiOverlay {
     private LatLngBounds getLatLngBounds() {
         LatLngBounds.Builder b = LatLngBounds.builder();
         for (int i = 0; i < mPois.size(); i++) {
-            b.include(new LatLng(mPois.get(i).getLatLonPoint().getLatitude(),
+            b.include(new LatLng(
+                    mPois.get(i).getLatLonPoint().getLatitude(),
                     mPois.get(i).getLatLonPoint().getLongitude()));
         }
         return b.build();
@@ -87,10 +90,9 @@ public class PoiOverlay {
 
     private MarkerOptions getMarkerOptions(int index) {
         return new MarkerOptions()
-                .position(
-                        new LatLng(mPois.get(index).getLatLonPoint()
-                                .getLatitude(), mPois.get(index)
-                                .getLatLonPoint().getLongitude()))
+                .position(new LatLng(
+                        mPois.get(index).getLatLonPoint().getLatitude(),
+                        mPois.get(index).getLatLonPoint().getLongitude()))
                 .title(getTitle(index)).snippet(getSnippet(index))
                 .icon(getBitmapDescriptor(index));
     }

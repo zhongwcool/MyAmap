@@ -285,8 +285,9 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
             return;
         }
         MarkerOptions options = new MarkerOptions();
-        options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.navi_map_gps_locked)));
+        options.icon(BitmapDescriptorFactory.fromBitmap(
+                BitmapFactory.decodeResource(this.getResources(), R.drawable.navi_map_gps_locked))
+        );
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
         mLocMarker = aMap.addMarker(options);

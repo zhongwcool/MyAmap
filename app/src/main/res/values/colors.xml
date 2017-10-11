@@ -9,4 +9,5 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="row_divide">#FFBDBDBD</color>
+    <color name="shallow_black">#FF333333</color>
 </resources>

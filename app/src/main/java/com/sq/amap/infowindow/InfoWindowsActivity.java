@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
@@ -167,9 +166,9 @@ public class InfoWindowsActivity extends Activity implements PoiSearch.OnPoiSear
         @Override
         protected BitmapDescriptor getBitmapDescriptor(int index) {
             View view = null;
-            view = View.inflate(InfoWindowsActivity.this, R.layout.custom_view, null);
-            TextView textView = view.findViewById(R.id.title);
-            textView.setText(getTitle(index));
+            view = View.inflate(InfoWindowsActivity.this, R.layout.custom_view2, null);
+            //TextView textView = view.findViewById(R.id.title);
+            //textView.setText(getTitle(index));
 
             return BitmapDescriptorFactory.fromView(view);
         }
