@@ -172,10 +172,10 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
         if (mSensorHelper != null) {
             mSensorHelper.unRegisterSensorListener();
             mSensorHelper.setCurrentMarker(null);
-            mSensorHelper = null;
+            //mSensorHelper = null;
         }
         mapView.onPause();
-        deactivate();
+
         mFirstFix = false;
     }
 
