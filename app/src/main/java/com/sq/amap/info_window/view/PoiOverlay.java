@@ -1,4 +1,4 @@
-package com.sq.amap.infowindow.view;
+package com.sq.amap.info_window.view;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;

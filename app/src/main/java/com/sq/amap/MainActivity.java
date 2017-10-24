@@ -3,7 +3,8 @@ package com.sq.amap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sq.amap.infowindow.InfoWindowsActivity;
+import com.sq.amap.info_window.InfoWindowsActivity;
+import com.sq.amap.location_circle.LocationCircleActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,7 +39,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.info_window)
-    public void onViewClicked() {
+    public void onInfoWindowClicked() {
         InfoWindowsActivity.start(this);
+    }
+
+    @OnClick(R.id.location_circle)
+    public void onLocationCircleClicked() {
+        LocationCircleActivity.start(this);
     }
 }

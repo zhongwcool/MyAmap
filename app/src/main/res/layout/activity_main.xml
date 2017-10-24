@@ -93,6 +93,23 @@
                 android:text="多信息弹窗/气泡效果"
                 android:textSize="20sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/divider_row_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/location_circle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="定位圈动画"
+                android:textSize="20sp" />
+        </LinearLayout>
     </LinearLayout>
 
 

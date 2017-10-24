@@ -63,7 +63,7 @@
             android:name=".LocationServiceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".infowindow.InfoWindowsActivity"
+            android:name=".info_window.InfoWindowsActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -82,6 +82,7 @@
         <activity
             android:name=".InitialCenterActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".location_circle.LocationCircleActivity" />
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />

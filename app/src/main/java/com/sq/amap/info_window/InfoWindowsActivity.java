@@ -1,4 +1,4 @@
-package com.sq.amap.infowindow;
+package com.sq.amap.info_window;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.sq.amap.R;
-import com.sq.amap.infowindow.view.PoiOverlay;
+import com.sq.amap.info_window.view.PoiOverlay;
 
 import java.util.List;
 
