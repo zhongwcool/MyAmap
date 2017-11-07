@@ -48,12 +48,9 @@ public class RecordActivity extends Activity implements OnItemClickListener {
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-        PathRecord recorditem = (PathRecord) parent.getAdapter().getItem(
-                position);
-        Intent intent = new Intent(RecordActivity.this,
-                RecordShowActivity.class);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PathRecord recorditem = (PathRecord) parent.getAdapter().getItem(position);
+        Intent intent = new Intent(this, RecordShowActivity.class);
         intent.putExtra(RECORD_ID, recorditem.getId());
         startActivity(intent);
     }

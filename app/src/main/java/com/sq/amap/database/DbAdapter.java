@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 import com.sq.amap.record.PathRecord;
 import com.sq.amap.recorduitl.Util;
@@ -27,8 +28,8 @@ public class DbAdapter {
     public static final String KEY_STRAT = "stratpoint";
     public static final String KEY_END = "endpoint";
     public static final String KEY_DATE = "date";
-    private final static String DATABASE_PATH = android.os.Environment
-            .getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
+    private final static String DATABASE_PATH =
+            Environment.getExternalStorageDirectory().getAbsolutePath() + "/recordPath";
     static final String DATABASE_NAME = DATABASE_PATH + "/" + "record.db";
     private static final int DATABASE_VERSION = 1;
     private static final String RECORD_TABLE = "record";

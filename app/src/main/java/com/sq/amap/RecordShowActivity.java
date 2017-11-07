@@ -95,8 +95,7 @@ public class RecordShowActivity extends Activity implements
         int threadPoolSize = Runtime.getRuntime().availableProcessors() * 2 + 3;
         mThreadPool = Executors.newFixedThreadPool(threadPoolSize);
         if (recordIntent != null) {
-            mRecordItemId = recordIntent.getIntExtra(RecordActivity.RECORD_ID,
-                    -1);
+            mRecordItemId = recordIntent.getIntExtra(RecordActivity.RECORD_ID, -1);
         }
         initMap();
     }
@@ -200,8 +199,7 @@ public class RecordShowActivity extends Activity implements
      */
     private void setupRecord() {
         // 轨迹纠偏初始化
-        LBSTraceClient mTraceClient = new LBSTraceClient(
-                getApplicationContext());
+        LBSTraceClient mTraceClient = new LBSTraceClient(getApplicationContext());
         DbAdapter dbhelper = new DbAdapter(this.getApplicationContext());
         dbhelper.open();
         PathRecord mRecord = dbhelper.queryRecordById(mRecordItemId);
@@ -213,18 +211,14 @@ public class RecordShowActivity extends Activity implements
             if (recordList == null || startLoc == null || endLoc == null) {
                 return;
             }
-            LatLng startLatLng = new LatLng(startLoc.getLatitude(),
-                    startLoc.getLongitude());
-            LatLng endLatLng = new LatLng(endLoc.getLatitude(),
-                    endLoc.getLongitude());
+            LatLng startLatLng = new LatLng(startLoc.getLatitude(), startLoc.getLongitude());
+            LatLng endLatLng = new LatLng(endLoc.getLatitude(), endLoc.getLongitude());
             mOriginLatLngList = Util.parseLatLngList(recordList);
             addOriginTrace(startLatLng, endLatLng, mOriginLatLngList);
 
-            List<TraceLocation> mGraspTraceLocationList = Util
-                    .parseTraceLocationList(recordList);
+            List<TraceLocation> mGraspTraceLocationList = Util.parseTraceLocationList(recordList);
             // 调用轨迹纠偏，将mGraspTraceLocationList进行轨迹纠偏处理
-            mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList,
-                    LBSTraceClient.TYPE_AMAP, this);
+            mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList, LBSTraceClient.TYPE_AMAP, this);
         } else {
         }
 
@@ -239,26 +233,31 @@ public class RecordShowActivity extends Activity implements
      */
     private void addOriginTrace(LatLng startPoint, LatLng endPoint,
                                 List<LatLng> originList) {
-        mOriginPolyline = mAMap.addPolyline(new PolylineOptions().color(
-                Color.BLUE).addAll(originList));
-        mOriginStartMarker = mAMap.addMarker(new MarkerOptions().position(
-                startPoint).icon(
-                BitmapDescriptorFactory.fromResource(R.drawable.start)));
-        mOriginEndMarker = mAMap.addMarker(new MarkerOptions().position(
-                endPoint).icon(
-                BitmapDescriptorFactory.fromResource(R.drawable.end)));
+        mOriginPolyline = mAMap.addPolyline(new PolylineOptions().color(Color.BLUE).addAll(originList));
+        mOriginStartMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(startPoint)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
+        );
+        mOriginEndMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(endPoint)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end))
+        );
 
         try {
-            mAMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getBounds(),
-                    50));
+            mAMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getBounds(), 50));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        mOriginRoleMarker = mAMap.addMarker(new MarkerOptions().position(
-                startPoint).icon(
-                BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(), R.drawable.walk))));
+        mOriginRoleMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(startPoint)
+                        .icon(BitmapDescriptorFactory.fromBitmap(
+                                BitmapFactory.decodeResource(getResources(), R.drawable.walk))
+                        )
+        );
     }
 
     /**
@@ -294,21 +293,23 @@ public class RecordShowActivity extends Activity implements
         }
         LatLng startPoint = graspList.get(0);
         LatLng endPoint = graspList.get(graspList.size() - 1);
-        mGraspPolyline = mAMap.addPolyline(new PolylineOptions()
-                .setCustomTexture(
-                        BitmapDescriptorFactory
-                                .fromResource(R.drawable.grasp_trace_line))
-                .width(40).addAll(graspList));
-        mGraspStartMarker = mAMap.addMarker(new MarkerOptions().position(
-                startPoint).icon(
-                BitmapDescriptorFactory.fromResource(R.drawable.start)));
-        mGraspEndMarker = mAMap.addMarker(new MarkerOptions()
-                .position(endPoint).icon(
-                        BitmapDescriptorFactory.fromResource(R.drawable.end)));
-        mGraspRoleMarker = mAMap.addMarker(new MarkerOptions().position(
-                startPoint).icon(
-                BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(), R.drawable.walk))));
+        mGraspPolyline = mAMap.addPolyline(
+                new PolylineOptions()
+                        .setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line))
+                        .width(40)
+                        .addAll(graspList));
+        mGraspStartMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(startPoint)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+        mGraspEndMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(endPoint)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+        mGraspRoleMarker = mAMap.addMarker(
+                new MarkerOptions()
+                        .position(startPoint)
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.walk))));
         if (!mGraspChecked) {
             mGraspPolyline.setVisible(false);
             mGraspStartMarker.setVisible(false);
@@ -359,8 +360,7 @@ public class RecordShowActivity extends Activity implements
 
     @Override
     public void onRequestFailed(int arg0, String arg1) {
-        Toast.makeText(this.getApplicationContext(), "轨迹纠偏失败:" + arg1,
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), "轨迹纠偏失败:" + arg1, Toast.LENGTH_SHORT).show();
 
     }
 

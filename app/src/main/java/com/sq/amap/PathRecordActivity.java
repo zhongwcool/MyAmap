@@ -54,9 +54,12 @@ public class PathRecordActivity extends Activity implements LocationSource,
         AMapLocationListener, TraceListener, EasyPermissions.PermissionCallbacks {
     private static final String TAG = PathRecordActivity.class.getSimpleName();
     //private static final int RC_STORAGE_PERM = 124;
-    private static final int RC_LOCATION_PERM = 123;
-
+    private static final int RC_REQUIRED_PERM = 123;
     private final static int CALLTRACE = 0;
+    String[] perms = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     private MapView mMapView;
     private AMap mAMap;
     private OnLocationChangedListener mListener;
@@ -91,17 +94,17 @@ public class PathRecordActivity extends Activity implements LocationSource,
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @AfterPermissionGranted(RC_LOCATION_PERM)
+    @AfterPermissionGranted(RC_REQUIRED_PERM)
     private void LocationTask() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, do the thing
             init();
             initpolyline();
         } else {
             // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.location_rationale),
-                    RC_LOCATION_PERM, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.tips_request_permissions),
+                    RC_REQUIRED_PERM, perms);
         }
     }
 
@@ -168,8 +171,7 @@ public class PathRecordActivity extends Activity implements LocationSource,
                     mEndTime = System.currentTimeMillis();
                     mOverlayList.add(mTraceoverlay);
                     DecimalFormat decimalFormat = new DecimalFormat("0.0");
-                    mResultShow.setText(
-                            decimalFormat.format(getTotalDistance() / 1000d) + "KM");
+                    mResultShow.setText(decimalFormat.format(getTotalDistance() / 1000d) + "KM");
                     LBSTraceClient mTraceClient = new LBSTraceClient(getApplicationContext());
                     mTraceClient.queryProcessedTrace(2, Util.parseTraceLocationList(record.getPathline()), LBSTraceClient.TYPE_AMAP, PathRecordActivity.this);
                     saveRecord(record.getPathline(), record.getDate());
@@ -193,12 +195,10 @@ public class PathRecordActivity extends Activity implements LocationSource,
             AMapLocation lastLocaiton = list.get(list.size() - 1);
             String stratpoint = amapLocationToString(firstLocaiton);
             String endpoint = amapLocationToString(lastLocaiton);
-            DbHepler.createrecord(String.valueOf(distance), duration, average,
-                    pathlineSring, stratpoint, endpoint, time);
+            DbHepler.createrecord(String.valueOf(distance), duration, average, pathlineSring, stratpoint, endpoint, time);
             DbHepler.close();
         } else {
-            Toast.makeText(PathRecordActivity.this, "没有记录到路径", Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(PathRecordActivity.this, "没有记录到路径", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -218,12 +218,9 @@ public class PathRecordActivity extends Activity implements LocationSource,
         for (int i = 0; i < list.size() - 1; i++) {
             AMapLocation firstpoint = list.get(i);
             AMapLocation secondpoint = list.get(i + 1);
-            LatLng firstLatLng = new LatLng(firstpoint.getLatitude(),
-                    firstpoint.getLongitude());
-            LatLng secondLatLng = new LatLng(secondpoint.getLatitude(),
-                    secondpoint.getLongitude());
-            double betweenDis = AMapUtils.calculateLineDistance(firstLatLng,
-                    secondLatLng);
+            LatLng firstLatLng = new LatLng(firstpoint.getLatitude(), firstpoint.getLongitude());
+            LatLng secondLatLng = new LatLng(secondpoint.getLatitude(), secondpoint.getLongitude());
+            double betweenDis = AMapUtils.calculateLineDistance(firstLatLng, secondLatLng);
             distance = (float) (distance + betweenDis);
         }
         return distance;
@@ -240,8 +237,7 @@ public class PathRecordActivity extends Activity implements LocationSource,
             pathline.append(locString).append(";");
         }
         String pathLineString = pathline.toString();
-        pathLineString = pathLineString.substring(0,
-                pathLineString.length() - 1);
+        pathLineString = pathLineString.substring(0, pathLineString.length() - 1);
         return pathLineString;
     }
 
@@ -339,8 +335,7 @@ public class PathRecordActivity extends Activity implements LocationSource,
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                LatLng mylocation = new LatLng(amapLocation.getLatitude(),
-                        amapLocation.getLongitude());
+                LatLng mylocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 mAMap.moveCamera(CameraUpdateFactory.changeLatLng(mylocation));
                 if (btn.isChecked()) {
                     record.addpoint(amapLocation);
@@ -407,8 +402,7 @@ public class PathRecordActivity extends Activity implements LocationSource,
 
     @SuppressLint("SimpleDateFormat")
     private String getcueDate(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd  HH:mm:ss ");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss ");
         Date curDate = new Date(time);
         String date = formatter.format(curDate);
         return date;
@@ -465,8 +459,7 @@ public class PathRecordActivity extends Activity implements LocationSource,
                             new MarkerOptions()
                                     .position(linepoints.get(linepoints.size() - 1))
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.point))
-                                    .title("距离：" + mDistance + "米")
-                    );
+                                    .title("距离：" + mDistance + "米"));
                     mlocMarker.showInfoWindow();
                 } else {
                     mlocMarker.setTitle("距离：" + mDistance + "米");
@@ -477,9 +470,10 @@ public class PathRecordActivity extends Activity implements LocationSource,
             }
         } else if (lineID == 2) {
             if (linepoints != null && linepoints.size() > 0) {
-                mAMap.addPolyline(new PolylineOptions()
-                        .color(Color.RED)
-                        .width(40).addAll(linepoints));
+                mAMap.addPolyline(
+                        new PolylineOptions()
+                                .color(Color.RED)
+                                .width(40).addAll(linepoints));
             }
         }
 

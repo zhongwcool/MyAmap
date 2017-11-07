@@ -8,4 +8,5 @@
     <string name="startLocation">启动定位服务</string>
     <string name="stopLocation">关闭定位服务</string>
     <string name="location_rationale">需要获取手机的位置权限</string>
+    <string name="tips_request_permissions">手机需要获得相应权限才能完成此任务</string>
 </resources>
