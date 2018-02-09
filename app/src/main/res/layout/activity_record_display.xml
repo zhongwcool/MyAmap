@@ -83,7 +83,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/record_show_activity_origin_radio_button"
+                android:id="@+id/radio_show_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -103,7 +103,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/record_show_activity_grasp_radio_button"
+                android:id="@+id/radio_show_grasp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="轨迹纠偏" />

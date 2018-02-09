@@ -42,19 +42,15 @@ import java.util.concurrent.Executors;
 /**
  * 实现轨迹回放、纠偏后轨迹回放
  */
-public class RecordShowActivity extends Activity implements
-        OnMapLoadedListener, TraceListener, OnClickListener {
+public class RecordShowActivity extends Activity implements OnMapLoadedListener, TraceListener, OnClickListener {
     private final static int AMAP_LOADED = 2;
-
     private RadioButton mOriginRadioButton, mGraspRadioButton;
     private ToggleButton mDisplaybtn;
-
     private MapView mMapView;
     private AMap mAMap;
     private Marker mOriginStartMarker, mOriginEndMarker, mOriginRoleMarker;
     private Marker mGraspStartMarker, mGraspEndMarker, mGraspRoleMarker;
-    private Polyline mOriginPolyline, mGraspPolyline;
-
+    private Polyline mOriginPolyline, mGraspPolyline, mGraspPolyline2;
     private int mRecordItemId;
     private List<LatLng> mOriginLatLngList;
     private List<LatLng> mGraspLatLngList;
@@ -85,8 +81,8 @@ public class RecordShowActivity extends Activity implements
         setContentView(R.layout.activity_record_display);
         mMapView = findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
-        mGraspRadioButton = findViewById(R.id.record_show_activity_grasp_radio_button);
-        mOriginRadioButton = findViewById(R.id.record_show_activity_origin_radio_button);
+        mGraspRadioButton = findViewById(R.id.radio_show_grasp);
+        mOriginRadioButton = findViewById(R.id.radio_show_origin);
         mOriginRadioButton.setOnClickListener(this);
         mGraspRadioButton.setOnClickListener(this);
         mDisplaybtn = findViewById(R.id.displaybtn);
@@ -231,9 +227,12 @@ public class RecordShowActivity extends Activity implements
      * @param endPoint
      * @param originList
      */
-    private void addOriginTrace(LatLng startPoint, LatLng endPoint,
-                                List<LatLng> originList) {
-        mOriginPolyline = mAMap.addPolyline(new PolylineOptions().color(Color.BLUE).addAll(originList));
+    private void addOriginTrace(LatLng startPoint, LatLng endPoint, List<LatLng> originList) {
+        mOriginPolyline = mAMap.addPolyline(
+                new PolylineOptions()
+                        .color(Color.BLUE)
+                        .addAll(originList)
+        );
         mOriginStartMarker = mAMap.addMarker(
                 new MarkerOptions()
                         .position(startPoint)
@@ -254,9 +253,7 @@ public class RecordShowActivity extends Activity implements
         mOriginRoleMarker = mAMap.addMarker(
                 new MarkerOptions()
                         .position(startPoint)
-                        .icon(BitmapDescriptorFactory.fromBitmap(
-                                BitmapFactory.decodeResource(getResources(), R.drawable.walk))
-                        )
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.walk)))
         );
     }
 
@@ -297,21 +294,32 @@ public class RecordShowActivity extends Activity implements
                 new PolylineOptions()
                         .setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line))
                         .width(40)
-                        .addAll(graspList));
+                        .addAll(graspList)
+        );
+        mGraspPolyline2 = mAMap.addPolyline(
+                new PolylineOptions()
+                        .color(Color.BLUE)
+                        .width(40)
+                        .addAll(mOriginLatLngList)
+        );
         mGraspStartMarker = mAMap.addMarker(
                 new MarkerOptions()
                         .position(startPoint)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
+        );
         mGraspEndMarker = mAMap.addMarker(
                 new MarkerOptions()
                         .position(endPoint)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.end))
+        );
         mGraspRoleMarker = mAMap.addMarker(
                 new MarkerOptions()
                         .position(startPoint)
-                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.walk))));
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.walk)))
+        );
         if (!mGraspChecked) {
             mGraspPolyline.setVisible(false);
+            mGraspPolyline2.setVisible(false);
             mGraspStartMarker.setVisible(false);
             mGraspEndMarker.setVisible(false);
             mGraspRoleMarker.setVisible(false);
@@ -331,11 +339,13 @@ public class RecordShowActivity extends Activity implements
         }
         if (enable) {
             mGraspPolyline.setVisible(true);
+            mGraspPolyline2.setVisible(true);
             mGraspStartMarker.setVisible(true);
             mGraspEndMarker.setVisible(true);
             mGraspRoleMarker.setVisible(true);
         } else {
             mGraspPolyline.setVisible(false);
+            mGraspPolyline2.setVisible(false);
             mGraspStartMarker.setVisible(false);
             mGraspEndMarker.setVisible(false);
             mGraspRoleMarker.setVisible(false);
@@ -360,7 +370,7 @@ public class RecordShowActivity extends Activity implements
 
     @Override
     public void onRequestFailed(int arg0, String arg1) {
-        Toast.makeText(this.getApplicationContext(), "轨迹纠偏失败:" + arg1, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "轨迹纠偏失败:" + arg1, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -379,7 +389,7 @@ public class RecordShowActivity extends Activity implements
                     mDisplaybtn.setClickable(false);
                 }
                 break;
-            case R.id.record_show_activity_grasp_radio_button:
+            case R.id.radio_show_grasp:
                 mGraspChecked = true;
                 mOriginChecked = false;
                 mGraspRadioButton.setChecked(true);
@@ -389,7 +399,7 @@ public class RecordShowActivity extends Activity implements
                 mDisplaybtn.setChecked(false);
                 resetGraspRole();
                 break;
-            case R.id.record_show_activity_origin_radio_button:
+            case R.id.radio_show_origin:
                 mOriginChecked = true;
                 mGraspChecked = false;
                 mGraspRadioButton.setChecked(false);

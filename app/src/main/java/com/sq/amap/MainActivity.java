@@ -3,6 +3,7 @@ package com.sq.amap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sq.amap.cluster.ClusterActivity;
 import com.sq.amap.info_window.InfoWindowsActivity;
 import com.sq.amap.location_circle.LocationCircleActivity;
 
@@ -46,5 +47,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.location_circle)
     public void onLocationCircleClicked() {
         LocationCircleActivity.start(this);
+    }
+
+    @OnClick(R.id.cluster)
+    public void onViewClicked() {
+        ClusterActivity.start(this);
     }
 }

@@ -106,27 +106,17 @@ public class DbAdapter {
      */
     public List<PathRecord> queryRecordAll() {
         List<PathRecord> allRecord = new ArrayList<PathRecord>();
-        Cursor allRecordCursor = db.query(RECORD_TABLE, getColumns(), null,
-                null, null, null, null);
+        Cursor allRecordCursor = db.query(RECORD_TABLE, getColumns(), null, null, null, null, null);
         while (allRecordCursor.moveToNext()) {
             PathRecord record = new PathRecord();
-            record.setId(allRecordCursor.getInt(allRecordCursor
-                    .getColumnIndex(DbAdapter.KEY_ROWID)));
-            record.setDistance(allRecordCursor.getString(allRecordCursor
-                    .getColumnIndex(DbAdapter.KEY_DISTANCE)));
-            record.setDuration(allRecordCursor.getString(allRecordCursor
-                    .getColumnIndex(DbAdapter.KEY_DURATION)));
-            record.setDate(allRecordCursor.getString(allRecordCursor
-                    .getColumnIndex(DbAdapter.KEY_DATE)));
-            String lines = allRecordCursor.getString(allRecordCursor
-                    .getColumnIndex(DbAdapter.KEY_LINE));
+            record.setId(allRecordCursor.getInt(allRecordCursor.getColumnIndex(DbAdapter.KEY_ROWID)));
+            record.setDistance(allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_DISTANCE)));
+            record.setDuration(allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_DURATION)));
+            record.setDate(allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_DATE)));
+            String lines = allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_LINE));
             record.setPathline(Util.parseLocations(lines));
-            record.setStartpoint(Util.parseLocation(allRecordCursor
-                    .getString(allRecordCursor
-                            .getColumnIndex(DbAdapter.KEY_STRAT))));
-            record.setEndpoint(Util.parseLocation(allRecordCursor
-                    .getString(allRecordCursor
-                            .getColumnIndex(DbAdapter.KEY_END))));
+            record.setStartpoint(Util.parseLocation(allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_STRAT))));
+            record.setEndpoint(Util.parseLocation(allRecordCursor.getString(allRecordCursor.getColumnIndex(DbAdapter.KEY_END))));
             allRecord.add(record);
         }
         Collections.reverse(allRecord);
@@ -142,32 +132,23 @@ public class DbAdapter {
     public PathRecord queryRecordById(int mRecordItemId) {
         String where = KEY_ROWID + "=?";
         String[] selectionArgs = new String[]{String.valueOf(mRecordItemId)};
-        Cursor cursor = db.query(RECORD_TABLE, getColumns(), where,
-                selectionArgs, null, null, null);
+        Cursor cursor = db.query(RECORD_TABLE, getColumns(), where, selectionArgs, null, null, null);
         PathRecord record = new PathRecord();
         if (cursor.moveToNext()) {
-            record.setId(cursor.getInt(cursor
-                    .getColumnIndex(DbAdapter.KEY_ROWID)));
-            record.setDistance(cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_DISTANCE)));
-            record.setDuration(cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_DURATION)));
-            record.setDate(cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_DATE)));
-            String lines = cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_LINE));
+            record.setId(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)));
+            record.setDistance(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DISTANCE)));
+            record.setDuration(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DURATION)));
+            record.setDate(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DATE)));
+            String lines = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LINE));
             record.setPathline(Util.parseLocations(lines));
-            record.setStartpoint(Util.parseLocation(cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_STRAT))));
-            record.setEndpoint(Util.parseLocation(cursor.getString(cursor
-                    .getColumnIndex(DbAdapter.KEY_END))));
+            record.setStartpoint(Util.parseLocation(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_STRAT))));
+            record.setEndpoint(Util.parseLocation(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_END))));
         }
         return record;
     }
 
     private String[] getColumns() {
-        return new String[]{KEY_ROWID, KEY_DISTANCE, KEY_DURATION, KEY_SPEED,
-                KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE};
+        return new String[]{KEY_ROWID, KEY_DISTANCE, KEY_DURATION, KEY_SPEED, KEY_LINE, KEY_STRAT, KEY_END, KEY_DATE};
     }
 
     public static class DatabaseHelper extends SQLiteOpenHelper {

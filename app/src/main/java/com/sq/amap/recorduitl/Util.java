@@ -1,5 +1,7 @@
 package com.sq.amap.recorduitl;
 
+import android.util.Log;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.trace.TraceLocation;
@@ -88,6 +90,7 @@ public class Util {
     }
 
     public static ArrayList<AMapLocation> parseLocations(String latLonStr) {
+        Log.e("轨迹字串", "数据" + latLonStr);
         ArrayList<AMapLocation> locations = new ArrayList<AMapLocation>();
         String[] latLonStrs = latLonStr.split(";");
         for (int i = 0; i < latLonStrs.length; i++) {
