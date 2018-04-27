@@ -63,7 +63,7 @@
             android:name=".LocationServiceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".info_window.InfoWindowsActivity"
+            android:name=".info_window.PoiInfoActivity"
             android:screenOrientation="portrait" />
 
         <activity

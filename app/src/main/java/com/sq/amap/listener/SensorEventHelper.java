@@ -56,8 +56,7 @@ public class SensorEventHelper implements SensorEventListener {
     }
 
     public void registerSensorListener() {
-        mSensorManager.registerListener(this, mSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void unRegisterSensorListener() {

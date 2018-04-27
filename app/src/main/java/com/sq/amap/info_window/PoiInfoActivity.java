@@ -13,6 +13,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
@@ -22,14 +23,14 @@ import com.sq.amap.info_window.view.PoiOverlay;
 
 import java.util.List;
 
-public class InfoWindowsActivity extends Activity implements PoiSearch.OnPoiSearchListener {
+public class PoiInfoActivity extends Activity implements PoiSearch.OnPoiSearchListener, AMap.OnPOIClickListener {
     private AMap aMap;
     private MapView mapView;
     private LatLonPoint centerpoint = new LatLonPoint(39.983178, 116.464348);
     private ViewPoiOverlay poiOverlay;
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, InfoWindowsActivity.class);
+        Intent starter = new Intent(context, PoiInfoActivity.class);
         context.startActivity(starter);
     }
 
@@ -90,6 +91,7 @@ public class InfoWindowsActivity extends Activity implements PoiSearch.OnPoiSear
         if (aMap == null) {
             aMap = mapView.getMap();
         }
+        aMap.setOnPOIClickListener(this);
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(convertToLatLng(centerpoint), 13));
     }
 
@@ -157,6 +159,11 @@ public class InfoWindowsActivity extends Activity implements PoiSearch.OnPoiSear
 
     }
 
+    @Override
+    public void onPOIClick(Poi poi) {
+        Toast.makeText(this, "点击的是POI", Toast.LENGTH_SHORT).show();
+    }
+
     public class ViewPoiOverlay extends PoiOverlay {
 
         public ViewPoiOverlay(AMap aMap, List<PoiItem> list) {
@@ -165,10 +172,15 @@ public class InfoWindowsActivity extends Activity implements PoiSearch.OnPoiSear
 
         @Override
         protected BitmapDescriptor getBitmapDescriptor(int index) {
-            View view = null;
-            view = View.inflate(InfoWindowsActivity.this, R.layout.custom_view2, null);
+            View view = View.inflate(PoiInfoActivity.this, R.layout.custom_view2, null);
             //TextView textView = view.findViewById(R.id.title);
             //textView.setText(getTitle(index));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(PoiInfoActivity.this, "还是被我点到了", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             return BitmapDescriptorFactory.fromView(view);
         }

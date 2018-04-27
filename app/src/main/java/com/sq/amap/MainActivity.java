@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.sq.amap.cluster.ClusterActivity;
-import com.sq.amap.info_window.InfoWindowsActivity;
+import com.sq.amap.info_window.PoiInfoActivity;
 import com.sq.amap.location_circle.LocationCircleActivity;
 
 import butterknife.ButterKnife;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.info_window)
     public void onInfoWindowClicked() {
-        InfoWindowsActivity.start(this);
+        PoiInfoActivity.start(this);
     }
 
     @OnClick(R.id.location_circle)

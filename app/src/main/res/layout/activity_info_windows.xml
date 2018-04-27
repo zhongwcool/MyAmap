@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".info_window.InfoWindowsActivity">
+    tools:context=".info_window.PoiInfoActivity">
 
     <com.amap.api.maps.MapView
         android:id="@+id/map"

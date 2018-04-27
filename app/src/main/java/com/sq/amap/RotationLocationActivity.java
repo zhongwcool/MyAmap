@@ -5,7 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +28,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.CircleOptions;
@@ -30,6 +37,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.sq.amap.listener.SensorEventHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,7 +47,8 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class RotationLocationActivity extends AppCompatActivity implements LocationSource,
-        AMapLocationListener, EasyPermissions.PermissionCallbacks {
+        AMapLocationListener, EasyPermissions.PermissionCallbacks, AMap.OnMarkerClickListener,
+        SensorEventListener {
     public static final String LOCATION_MARKER_FLAG = "mylocation";
     private static final String TAG = RotationLocationActivity.class.getSimpleName();
     //private static final int RC_STORAGE_PERM = 124;
@@ -57,8 +66,17 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     private TextView mLocationErrText;
     private boolean mFirstFix = false;
     private Marker mLocMarker;
-    private SensorEventHelper mSensorHelper;
     private Circle mCircle;
+
+    //记录rotationMatrix矩阵值
+    private float[] r = new float[9];
+    //记录通过getOrientation()计算出来的方位横滚俯仰值
+    private float[] values = new float[3];
+    private float[] gravity = null;
+    private float[] geomagnetic = null;
+    // 定义真机的Sensor管理器
+    private SensorManager mSensorManager;
+    private Handler handler;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, RotationLocationActivity.class);
@@ -122,6 +140,10 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
 
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         LocationTask();
+
+        handler = new MyHandler(this);
+        // 获取真机的传感器管理服务
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
     /**
@@ -132,10 +154,7 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
             aMap = mapView.getMap();
             setUpMap();
         }
-        mSensorHelper = new SensorEventHelper(this);
-        if (mSensorHelper != null) {
-            mSensorHelper.registerSensorListener();
-        }
+
         mLocationErrText = findViewById(R.id.location_errInfo_text);
         mLocationErrText.setVisibility(View.GONE);
     }
@@ -149,6 +168,7 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        aMap.setOnMarkerClickListener(this);
     }
 
     /**
@@ -158,9 +178,13 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        if (mSensorHelper != null) {
-            mSensorHelper.registerSensorListener();
-        }
+
+        //注册加速度传感器监听
+        Sensor acceleSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, acceleSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //注册磁场传感器监听
+        Sensor magSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensorManager.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     /**
@@ -169,14 +193,12 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     @Override
     protected void onPause() {
         super.onPause();
-        if (mSensorHelper != null) {
-            mSensorHelper.unRegisterSensorListener();
-            mSensorHelper.setCurrentMarker(null);
-            //mSensorHelper = null;
-        }
         mapView.onPause();
 
         mFirstFix = false;
+
+        // 取消所有注册
+        mSensorManager.unregisterListener(this);
     }
 
     /**
@@ -217,7 +239,7 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
                     mFirstFix = true;
                     addCircle(location, amapLocation.getAccuracy());//添加定位精度圆
                     addMarker(location);//添加定位图标
-                    mSensorHelper.setCurrentMarker(mLocMarker);//定位图标旋转
+                    //mSensorHelper.setCurrentMarker(mLocMarker);//定位图标旋转
                     aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 18));
                 } else {
                     mCircle.setCenter(location);
@@ -294,5 +316,63 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
         options.position(latlng);
         mLocMarker = aMap.addMarker(options);
         mLocMarker.setTitle(LOCATION_MARKER_FLAG);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //aMap.clear();
+        //MarkerOptions options = marker.getOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.end)));
+        //mLocMarker = aMap.addMarker(options);
+        return true;
+    }
+
+    private static class MyHandler extends Handler{
+        private WeakReference<RotationLocationActivity> wActivity;
+        private float mAngle = 0f;
+
+        MyHandler(RotationLocationActivity activity) {
+            this.wActivity = new WeakReference<>(activity);
+        }
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            RotationLocationActivity mActivity = wActivity.get();
+            if(mActivity == null) return;
+
+            if (mActivity.gravity != null && mActivity.geomagnetic != null) {
+                if (SensorManager.getRotationMatrix(mActivity.r, null, mActivity.gravity, mActivity.geomagnetic)) {
+                    SensorManager.getOrientation(mActivity.r, mActivity.values);
+                    float degree = (float) ((360f + mActivity.values[0] * 180f / Math.PI) % 360);
+
+                    if (Math.abs(mAngle - degree) < 8.0f) {
+                        return;
+                    }
+                    mAngle = degree;
+
+                    Log.i(TAG, "计算出来的方位角＝" + degree);
+                    mActivity.aMap.moveCamera(CameraUpdateFactory.changeBearing(degree));
+                }
+            }
+        }
+    };
+
+        @Override
+    public void onSensorChanged(SensorEvent event) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ACCELEROMETER: //加速度传感器
+                    gravity = event.values;
+                    handler.sendEmptyMessage(0);
+                    break;
+                case Sensor.TYPE_MAGNETIC_FIELD://磁场传感器
+                    geomagnetic = event.values;
+                    handler.sendEmptyMessage(0);
+                    break;
+            }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }

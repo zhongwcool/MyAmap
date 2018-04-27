@@ -65,8 +65,7 @@ public class ClusterActivity extends Activity implements ClusterRender,
                     double lon = Math.random() + 116.027116;
 
                     LatLng latLng1 = new LatLng(lat, lon, false);
-                    RegionItem regionItem = new RegionItem(latLng1,
-                            "test");
+                    RegionItem regionItem = new RegionItem(latLng1, "test");
                     mClusterOverlay.addClusterItem(regionItem);
                 }
             });
@@ -99,7 +98,7 @@ public class ClusterActivity extends Activity implements ClusterRender,
                 List<ClusterItem> items = new ArrayList<ClusterItem>();
 
                 //随机10000个点
-                for (int i = 0; i < 10000; i++) {
+                for (int i = 0; i < 100; i++) {
                     double lat = Math.random() + 39.474923;
                     double lon = Math.random() + 116.027116;
 
