@@ -28,14 +28,12 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.sq.amap.listener.SensorEventHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -69,7 +67,7 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     private Circle mCircle;
 
     //记录rotationMatrix矩阵值
-    private float[] r = new float[9];
+    private float[] matrix = new float[9];
     //记录通过getOrientation()计算出来的方位横滚俯仰值
     private float[] values = new float[3];
     private float[] gravity = null;
@@ -329,6 +327,8 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
     private static class MyHandler extends Handler{
         private WeakReference<RotationLocationActivity> wActivity;
         private float mAngle = 0f;
+        private boolean isAllow = false;
+        private static int COUNT = 0;
 
         MyHandler(RotationLocationActivity activity) {
             this.wActivity = new WeakReference<>(activity);
@@ -342,17 +342,28 @@ public class RotationLocationActivity extends AppCompatActivity implements Locat
             if(mActivity == null) return;
 
             if (mActivity.gravity != null && mActivity.geomagnetic != null) {
-                if (SensorManager.getRotationMatrix(mActivity.r, null, mActivity.gravity, mActivity.geomagnetic)) {
-                    SensorManager.getOrientation(mActivity.r, mActivity.values);
-                    float degree = (float) ((360f + mActivity.values[0] * 180f / Math.PI) % 360);
+                if (SensorManager.getRotationMatrix(mActivity.matrix, null, mActivity.gravity, mActivity.geomagnetic)) {
+                    SensorManager.getOrientation(mActivity.matrix, mActivity.values);
+                    float degree = (float) Math.toDegrees(mActivity.values[0]);
 
-                    if (Math.abs(mAngle - degree) < 8.0f) {
+                    if (Math.abs(mAngle - degree) < 2.1f) {
                         return;
                     }
+
+                    if(mAngle > degree) {
+                        if(COUNT < 0) COUNT = 0;
+                        COUNT++;
+                    } else {
+                        if(COUNT > 0) COUNT = 0;
+                        COUNT--;
+                    }
+                    Log.i(TAG, "计数＝\t" + COUNT + "\t上次方位角＝" + mAngle);
                     mAngle = degree;
 
-                    Log.i(TAG, "计算出来的方位角＝" + degree);
-                    mActivity.aMap.moveCamera(CameraUpdateFactory.changeBearing(degree));
+                    if(Math.abs(COUNT) >= 3) {
+                        Log.i(TAG, "触发方位角＝" + degree);
+                        mActivity.aMap.moveCamera(CameraUpdateFactory.changeBearing(degree));
+                    }
                 }
             }
         }
